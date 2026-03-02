@@ -17,7 +17,7 @@
  * - 机器人服务 (RobotService)
  * 
  * @example
- * import { init, UserAdmin, MessageAdmin } from '@wildfirechat/server-sdk';
+ * import { init, UserAdmin, MessageAdmin } from '@imndx/server-sdk';
  * 
  * // 初始化SDK
  * init('http://localhost:18080', 'your-secret-key');

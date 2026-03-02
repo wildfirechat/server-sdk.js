@@ -5,13 +5,13 @@
 ## 安装
 
 ```bash
-npm install @wildfirechat/server-sdk
+npm install @imndx/server-sdk
 ```
 
 ## 快速开始
 
 ```javascript
-import { init, UserAdmin, MessageAdmin, Conversation, MessageContentType } from '@wildfirechat/server-sdk';
+import { init, UserAdmin, MessageAdmin, Conversation, MessageContentType } from '@imndx/server-sdk';
 
 // 初始化SDK
 init('http://localhost:18080', 'your-admin-secret');
@@ -44,7 +44,7 @@ example().catch(console.error);
 ### 用户管理 (UserAdmin)
 
 ```javascript
-import { UserAdmin } from '@wildfirechat/server-sdk';
+import { UserAdmin } from '@imndx/server-sdk';
 
 // 获取用户信息
 await UserAdmin.getUserByUserId(userId);
@@ -75,7 +75,7 @@ await UserAdmin.getOnlineUser(nodeId, offset, count);
 ### 消息管理 (MessageAdmin)
 
 ```javascript
-import { MessageAdmin } from '@wildfirechat/server-sdk';
+import { MessageAdmin } from '@imndx/server-sdk';
 
 // 发送消息
 await MessageAdmin.sendMessage(sender, conversation, payload);
@@ -98,7 +98,7 @@ await MessageAdmin.getMessageDelivery(userId);
 ### 群组管理 (GroupAdmin)
 
 ```javascript
-import { GroupAdmin } from '@wildfirechat/server-sdk';
+import { GroupAdmin } from '@imndx/server-sdk';
 
 // 群组操作
 await GroupAdmin.createGroup(operator, groupInfo, members, memberExtra, toLines, notifyMessage);
@@ -122,7 +122,7 @@ await GroupAdmin.setGroupMemberAlias(operator, groupId, memberId, alias, toLines
 ### 好友关系管理 (RelationAdmin)
 
 ```javascript
-import { RelationAdmin } from '@wildfirechat/server-sdk';
+import { RelationAdmin } from '@imndx/server-sdk';
 
 // 好友管理
 await RelationAdmin.setUserFriend(userId, targetId, isFriend, extra);
@@ -141,7 +141,7 @@ await RelationAdmin.getRelation(userId, targetId);
 ### 聊天室管理 (ChatroomAdmin)
 
 ```javascript
-import { ChatroomAdmin } from '@wildfirechat/server-sdk';
+import { ChatroomAdmin } from '@imndx/server-sdk';
 
 await ChatroomAdmin.createChatroom(chatroomId, title, desc, portrait, extra, state);
 await ChatroomAdmin.destroyChatroom(chatroomId);
@@ -154,7 +154,7 @@ await ChatroomAdmin.setChatroomMute(chatroomId, mute);
 ### 频道管理 (ChannelAdmin)
 
 ```javascript
-import { ChannelAdmin } from '@wildfirechat/server-sdk';
+import { ChannelAdmin } from '@imndx/server-sdk';
 
 await ChannelAdmin.createChannel(channelInfo);
 await ChannelAdmin.destroyChannel(channelId);
@@ -166,7 +166,7 @@ await ChannelAdmin.unsubscribeChannel(channelId, userId);
 ### 会议管理 (ConferenceAdmin)
 
 ```javascript
-import { ConferenceAdmin } from '@wildfirechat/server-sdk';
+import { ConferenceAdmin } from '@imndx/server-sdk';
 
 await ConferenceAdmin.listConferences(count, offset);
 await ConferenceAdmin.createRoom(roomId, description, pin, maxPublisher, advance, bitrate, recording, permanent);
@@ -178,7 +178,7 @@ await ConferenceAdmin.enableRecording(roomId, advance, recording);
 ### 机器人服务 (RobotService)
 
 ```javascript
-import { RobotService } from '@wildfirechat/server-sdk';
+import { RobotService } from '@imndx/server-sdk';
 
 // 创建机器人服务实例（与Admin不同，需要实例化）
 const robotService = new RobotService('http://localhost:18080', 'robotId', 'robotSecret');
@@ -229,7 +229,7 @@ import {
     ImageMessageContent,
     FileMessageContent,
     // ... 等等
-} from '@wildfirechat/server-sdk';
+} from '@imndx/server-sdk';
 ```
 
 ## 错误处理
