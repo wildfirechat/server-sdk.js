@@ -211,6 +211,11 @@ class HttpUtils {
             throw new Error(errorMsg);
         }
 
+        // 处理空响应
+        if (!content || content.trim() === '') {
+            return new IMResult(0, 'success', null);
+        }
+
         // 解析响应体
         let result;
         try {

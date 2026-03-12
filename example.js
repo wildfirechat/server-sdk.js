@@ -7,6 +7,8 @@
  * 3. 修改下面的配置参数
  */
 
+import fs from 'fs';
+import path from 'path';
 import {
     init,
     getConfig,
@@ -39,7 +41,9 @@ import {
     RichNotificationMessageContent,
     StreamingTextGeneratingMessageContent,
     StreamingTextGeneratedMessageContent,
-    ErrorCode
+    ErrorCode,
+    // 媒体类型 - 用于 getPresignedUploadUrl
+    MessageContentMediaType
 } from './src/index.js';
 
 // ========== 配置 ==========
@@ -451,6 +455,224 @@ async function healthCheckExample() {
 }
 
 /**
+ * 示例: 获取预签名上传地址 (GeneralAdmin)
+ */
+async function generalAdminGetPresignedUploadUrlExample() {
+    console.log('\n========== GeneralAdmin 获取预签名上传地址示例 ==========');
+    
+    try {
+        // 示例1: 获取图片上传地址
+        console.log('\n1. 获取图片预签名上传地址...');
+        const imageResult = await GeneralAdmin.getPresignedUploadUrl(
+            'test_image.jpg',
+            MessageContentMediaType.Image,
+            'image/jpeg'
+        );
+        console.log('获取结果:', imageResult.isSuccess() ? '成功' : '失败');
+        if (imageResult.isSuccess()) {
+            console.log('上传地址信息:', JSON.stringify(imageResult.getResult(), null, 2));
+        } else {
+            console.log('错误信息:', imageResult.getMsg());
+        }
+        
+        // 示例2: 获取文件上传地址（自动识别 Content-Type）
+        console.log('\n2. 获取文件预签名上传地址...');
+        const fileResult = await GeneralAdmin.getPresignedUploadUrl(
+            'document.pdf',
+            MessageContentMediaType.File,
+            'application/pdf'
+        );
+        console.log('获取结果:', fileResult.isSuccess() ? '成功' : '失败');
+        if (fileResult.isSuccess()) {
+            console.log('上传地址信息:', JSON.stringify(fileResult.getResult(), null, 2));
+        } else {
+            console.log('错误信息:', fileResult.getMsg());
+        }
+        
+        // 示例3: 获取视频上传地址
+        console.log('\n3. 获取视频预签名上传地址...');
+        const videoResult = await GeneralAdmin.getPresignedUploadUrl(
+            'video_sample.mp4',
+            MessageContentMediaType.Video,
+            'video/mp4'
+        );
+        console.log('获取结果:', videoResult.isSuccess() ? '成功' : '失败');
+        if (videoResult.isSuccess()) {
+            console.log('上传地址信息:', JSON.stringify(videoResult.getResult(), null, 2));
+        } else {
+            console.log('错误信息:', videoResult.getMsg());
+        }
+        
+    } catch (error) {
+        console.error('获取预签名上传地址示例出错:', error.message);
+    }
+}
+
+/**
+ * 示例: 实际上传文件测试 (GeneralAdmin)
+ */
+async function generalAdminUploadFileExample() {
+    console.log('\n========== GeneralAdmin 实际上传文件测试 ==========');
+    
+    try {
+        // 方式1: 最简单的用法 - 只传文件路径，SDK自动处理一切
+        console.log('\n1. 上传图片文件（方式1: 只传文件路径）...');
+        const imagePath = './test_image.png';
+        if (fs.existsSync(imagePath)) {
+            console.log(`   文件路径: ${imagePath}`);
+            
+            const uploadResult = await GeneralAdmin.uploadFile(imagePath);
+            
+            console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+            if (uploadResult.isSuccess()) {
+                console.log('图片下载地址:', uploadResult.getResult());
+            } else {
+                console.log('错误信息:', uploadResult.getMsg());
+            }
+        } else {
+            console.log('   跳过: 未找到 test_image.png 文件');
+        }
+        
+        // 方式2: 指定媒体类型
+        console.log('\n2. 上传图片文件（方式2: 指定媒体类型）...');
+        if (fs.existsSync(imagePath)) {
+            console.log(`   文件路径: ${imagePath}`);
+            
+            const uploadResult = await GeneralAdmin.uploadFile(
+                imagePath,
+                MessageContentMediaType.Image  // 明确指定为图片类型
+            );
+            
+            console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+            if (uploadResult.isSuccess()) {
+                console.log('图片下载地址:', uploadResult.getResult());
+            } else {
+                console.log('错误信息:', uploadResult.getMsg());
+            }
+        } else {
+            console.log('   跳过: 未找到 test_image.png 文件');
+        }
+        
+        // 方式3: 指定媒体类型和Content-Type
+        console.log('\n3. 上传 PDF 文件（方式3: 指定媒体类型和Content-Type）...');
+        const pdfPath = './test_doc.pdf';
+        if (fs.existsSync(pdfPath)) {
+            console.log(`   文件路径: ${pdfPath}`);
+            
+            const uploadResult = await GeneralAdmin.uploadFile(
+                pdfPath,
+                MessageContentMediaType.File,
+                'application/pdf'
+            );
+            
+            console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+            if (uploadResult.isSuccess()) {
+                console.log('PDF 下载地址:', uploadResult.getResult());
+            } else {
+                console.log('错误信息:', uploadResult.getMsg());
+            }
+        } else {
+            console.log('   跳过: 未找到 test_doc.pdf 文件');
+        }
+        
+        // 方式4: 使用 Buffer（适用于内存中生成的内容）
+        console.log('\n4. 从内存上传文本内容（方式4: 使用 Buffer）...');
+        const testContent = '这是一个测试文件内容\nHello Wildfire Chat!\n上传时间: ' + new Date().toISOString();
+        const testFileBuffer = Buffer.from(testContent, 'utf8');
+        
+        console.log(`   文件大小: ${testFileBuffer.length} 字节`);
+        
+        const uploadResult = await GeneralAdmin.uploadFile(
+            testFileBuffer,                 // Buffer
+            MessageContentMediaType.File,   // 媒体类型
+            'text/plain'                    // Content-Type
+        );
+        
+        console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+        if (uploadResult.isSuccess()) {
+            console.log('文件下载地址:', uploadResult.getResult());
+        } else {
+            console.log('错误信息:', uploadResult.getMsg());
+        }
+        
+    } catch (error) {
+        console.error('实际上传文件测试出错:', error.message);
+    }
+}
+
+/**
+ * 示例: RobotService 实际上传文件测试
+ */
+async function robotServiceUploadFileExample() {
+    console.log('\n========== RobotService 实际上传文件测试 ==========');
+    
+    try {
+        const robotService = new RobotService(ADMIN_URL, ROBOT_ID, ROBOT_SECRET);
+        
+        // 方式1: 最简单的用法 - 只传文件路径
+        console.log('\n1. 机器人上传图片文件（方式1: 只传文件路径）...');
+        const imagePath = './test_image.png';
+        if (fs.existsSync(imagePath)) {
+            console.log(`   文件路径: ${imagePath}`);
+            
+            const uploadResult = await robotService.uploadFile(imagePath);
+            
+            console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+            if (uploadResult.isSuccess()) {
+                console.log('图片下载地址:', uploadResult.getResult());
+            } else {
+                console.log('错误信息:', uploadResult.getMsg());
+            }
+        } else {
+            console.log('   跳过: 未找到 test_image.png 文件');
+        }
+        
+        // 方式2: 指定媒体类型
+        console.log('\n2. 机器人上传图片文件（方式2: 指定媒体类型）...');
+        if (fs.existsSync(imagePath)) {
+            console.log(`   文件路径: ${imagePath}`);
+            
+            const uploadResult = await robotService.uploadFile(
+                imagePath,
+                MessageContentMediaType.Image
+            );
+            
+            console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+            if (uploadResult.isSuccess()) {
+                console.log('图片下载地址:', uploadResult.getResult());
+            } else {
+                console.log('错误信息:', uploadResult.getMsg());
+            }
+        } else {
+            console.log('   跳过: 未找到 test_image.png 文件');
+        }
+        
+        // 方式3: 使用 Buffer（适用于内存中生成的内容）
+        console.log('\n3. 机器人从内存上传文本内容（方式3: 使用 Buffer）...');
+        const testContent = '这是机器人上传的测试文件\nRobot Upload Test\n时间: ' + new Date().toISOString();
+        const testFileBuffer = Buffer.from(testContent, 'utf8');
+        
+        console.log(`   文件大小: ${testFileBuffer.length} 字节`);
+        
+        const uploadResult = await robotService.uploadFile(
+            testFileBuffer,                 // Buffer
+            MessageContentMediaType.File,   // 媒体类型
+            'text/plain'                    // Content-Type
+        );
+        
+        console.log('上传结果:', uploadResult.isSuccess() ? '成功' : '失败');
+        if (uploadResult.isSuccess()) {
+            console.log('文件下载地址:', uploadResult.getResult());
+        } else {
+            console.log('错误信息:', uploadResult.getMsg());
+        }
+        
+    } catch (error) {
+        console.error('RobotService 上传文件测试出错:', error.message);
+    }
+}
+
+/**
  * 示例8: 机器人服务
  */
 async function robotServiceExample() {
@@ -473,6 +695,20 @@ async function robotServiceExample() {
         const sendResult = await robotService.sendMessage(ROBOT_ID, conversation, payload);
         console.log('机器人发送消息结果:', sendResult.isSuccess() ? '成功' : sendResult.getMsg());
         
+        // 机器人获取预签名上传地址
+        console.log('\n2. 机器人获取预签名上传地址...');
+        const uploadUrlResult = await robotService.getPresignedUploadUrl(
+            'robot_upload_file.txt',
+            MessageContentMediaType.File,
+            'text/plain'
+        );
+        console.log('获取结果:', uploadUrlResult.isSuccess() ? '成功' : '失败');
+        if (uploadUrlResult.isSuccess()) {
+            console.log('上传地址信息:', JSON.stringify(uploadUrlResult.getResult(), null, 2));
+        } else {
+            console.log('错误信息:', uploadUrlResult.getMsg());
+        }
+        
     } catch (error) {
         console.error('机器人服务示例出错:', error.message);
     }
@@ -491,11 +727,14 @@ async function main() {
     await healthCheckExample();      // 系统健康检查
     // await userAdminExample();        // 用户管理
     // await messageAdminExample();     // 消息管理
-    await testMessageContent();      // 消息内容编码测试（与Java对齐）
+    //await testMessageContent();      // 消息内容编码测试（与Java对齐）
     // await groupAdminExample();       // 群组管理
     // await relationAdminExample();    // 好友关系管理
     // await chatroomAdminExample();    // 聊天室管理
     // await robotServiceExample();     // 机器人服务
+    //await generalAdminGetPresignedUploadUrlExample(); // GeneralAdmin 获取预签名上传地址
+    //await generalAdminUploadFileExample();             // GeneralAdmin 实际上传文件测试
+    //await robotServiceUploadFileExample();             // RobotService 实际上传文件测试
     
     console.log('\n========================================');
     console.log('示例运行完成');

@@ -3,8 +3,12 @@ import https from 'https';
 import http from 'http';
 import { URL } from 'url';
 import APIPath from './utils/apiPath.js';
-import httpUtils from './utils/httpUtils.js';
 import IMResult from './utils/imResult.js';
+import {
+    getContentTypeByFileName,
+    parseUploadParams,
+    executeUpload
+} from './utils/uploadHelper.js';
 
 /**
  * 机器人服务类
@@ -90,16 +94,30 @@ class RobotService {
                 res.on('data', chunk => responseData += chunk);
                 res.on('end', () => {
                     try {
+                        // 处理空响应
+                        if (!responseData || responseData.trim() === '') {
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                resolve(new IMResult(0, 'success', null));
+                            } else {
+                                reject(new Error(`HTTP请求失败，状态码: ${res.statusCode}`));
+                            }
+                            return;
+                        }
                         const result = JSON.parse(responseData);
                         resolve(new IMResult(result.code, result.msg, result.result));
                     } catch (error) {
-                        reject(new Error(`JSON解析失败: ${error.message}`));
+                        reject(new Error(`JSON解析失败: ${error.message}, 响应内容: ${responseData.substring(0, 200)}`));
                     }
                 });
             });
 
             req.on('error', (error) => {
                 reject(new Error(`HTTP请求异常: ${error.message}`));
+            });
+
+            req.on('timeout', () => {
+                req.destroy();
+                reject(new Error('HTTP请求超时'));
             });
 
             if (postData) {
@@ -598,6 +616,80 @@ class RobotService {
             advance: advance
         };
         return this._httpPost(APIPath.Robot_Conference_Request, input);
+    }
+
+    /**
+     * 获取预签名上传地址
+     * @param {string} fileName - 文件名
+     * @param {number} mediaType - 媒体类型，参考 MessageContentMediaType
+     * @param {string} contentType - 文件Content-Type，例如 "image/jpeg", "application/octet-stream" 等
+     * @returns {Promise<IMResult>} 包含预签名上传地址的结果
+     */
+    async getPresignedUploadUrl(fileName, mediaType, contentType) {
+        const requestPojo = {
+            fileName: fileName,
+            mediaType: mediaType,
+            contentType: contentType
+        };
+        return this._httpPost(APIPath.Robot_Get_Presigned_Upload_Url, requestPojo);
+    }
+
+    /**
+     * 上传文件
+     * 流程：先调用getPresignedUploadUrl获取预签名上传地址，然后直接上传文件。
+     * 上传成功后返回文件的下载地址等信息。
+     * 
+     * @param {string|Buffer} filePathOrFileBuffer - 文件路径（字符串）或文件内容（Buffer）
+     * @param {number} [mediaType=4] - 媒体类型，参考 MessageContentMediaType，默认为 FILE(4)
+     * @param {string} [contentType] - 文件Content-Type，例如 "image/jpeg", "application/octet-stream" 等；
+     *                                  如果为null或空，则根据文件名自动识别
+     * @returns {Promise<IMResult>} 上传结果，包含下载地址
+     * 
+     * @example
+     * // 方式1: 传入文件路径（最简单）
+     * const result = await robotService.uploadFile('/path/to/image.png');
+     * 
+     * // 方式2: 传入文件路径并指定媒体类型
+     * const result = await robotService.uploadFile('/path/to/image.png', MessageContentMediaType.Image);
+     * 
+     * // 方式3: 传入文件路径、媒体类型和Content-Type
+     * const result = await robotService.uploadFile('/path/to/file.pdf', MessageContentMediaType.File, 'application/pdf');
+     * 
+     * // 方式4: 传入Buffer（适用于内存中生成的内容）
+     * const buffer = Buffer.from('Hello World');
+     * const result = await robotService.uploadFile(buffer, MessageContentMediaType.File, 'text/plain');
+     * 
+     * // 方式5: 传入Buffer并指定文件名（通过options）
+     * const buffer = fs.readFileSync('/path/to/file.png');
+     * const result = await robotService.uploadFile(buffer, MessageContentMediaType.Image);
+     */
+    async uploadFile(filePathOrFileBuffer, mediaType = 4, contentType) {
+        // 解析参数获取文件名和文件内容
+        const { fileName, fileBuffer } = parseUploadParams(filePathOrFileBuffer);
+
+        if (!fileBuffer || fileBuffer.length === 0) {
+            throw new Error('文件内容不能为空');
+        }
+
+        // 如果未指定Content-Type，根据文件名自动获取
+        if (!contentType) {
+            contentType = getContentTypeByFileName(fileName);
+        }
+
+        // 1. 获取预签名上传地址
+        const presignedResult = await this.getPresignedUploadUrl(fileName, mediaType, contentType);
+
+        if (!presignedResult.isSuccess()) {
+            return presignedResult;
+        }
+
+        const presignedUrl = presignedResult.getResult();
+        if (!presignedUrl || !presignedUrl.uploadUrl) {
+            throw new Error('预签名上传地址为空');
+        }
+
+        // 2. 执行上传
+        return executeUpload(presignedUrl, fileBuffer, fileName, contentType);
     }
 }
 

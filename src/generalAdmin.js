@@ -1,5 +1,10 @@
 import APIPath from './utils/apiPath.js';
 import httpUtils from './utils/httpUtils.js';
+import {
+    getContentTypeByFileName,
+    parseUploadParams,
+    executeUpload
+} from './utils/uploadHelper.js';
 
 /**
  * 通用管理类
@@ -176,6 +181,80 @@ class GeneralAdmin {
      */
     static async getCustomer() {
         return httpUtils.httpJsonPost(APIPath.GET_CUSTOMER, null);
+    }
+
+    /**
+     * 获取预签名上传地址
+     * @param {string} fileName - 文件名
+     * @param {number} mediaType - 媒体类型，参考 MessageContentMediaType
+     * @param {string} contentType - 文件Content-Type，例如 "image/jpeg", "application/octet-stream" 等
+     * @returns {Promise<IMResult>} 包含预签名上传地址的结果
+     */
+    static async getPresignedUploadUrl(fileName, mediaType, contentType) {
+        const requestPojo = {
+            fileName: fileName,
+            mediaType: mediaType,
+            contentType: contentType
+        };
+        return httpUtils.httpJsonPost(APIPath.Get_Presigned_Upload_Url, requestPojo);
+    }
+
+    /**
+     * 上传文件
+     * 流程：先调用getPresignedUploadUrl获取预签名上传地址，然后直接上传文件。
+     * 上传成功后返回文件的下载地址等信息。
+     * 
+     * @param {string|Buffer} filePathOrFileBuffer - 文件路径（字符串）或文件内容（Buffer）
+     * @param {number} [mediaType=4] - 媒体类型，参考 MessageContentMediaType，默认为 FILE(4)
+     * @param {string} [contentType] - 文件Content-Type，例如 "image/jpeg", "application/octet-stream" 等；
+     *                                  如果为null或空，则根据文件名自动识别
+     * @returns {Promise<IMResult>} 上传结果，包含下载地址
+     * 
+     * @example
+     * // 方式1: 传入文件路径（最简单）
+     * const result = await GeneralAdmin.uploadFile('/path/to/image.png');
+     * 
+     * // 方式2: 传入文件路径并指定媒体类型
+     * const result = await GeneralAdmin.uploadFile('/path/to/image.png', MessageContentMediaType.Image);
+     * 
+     * // 方式3: 传入文件路径、媒体类型和Content-Type
+     * const result = await GeneralAdmin.uploadFile('/path/to/file.pdf', MessageContentMediaType.File, 'application/pdf');
+     * 
+     * // 方式4: 传入Buffer（适用于内存中生成的内容）
+     * const buffer = Buffer.from('Hello World');
+     * const result = await GeneralAdmin.uploadFile(buffer, MessageContentMediaType.File, 'text/plain');
+     * 
+     * // 方式5: 传入Buffer并指定文件名（通过options）
+     * const buffer = fs.readFileSync('/path/to/file.png');
+     * const result = await GeneralAdmin.uploadFile(buffer, MessageContentMediaType.Image);
+     */
+    static async uploadFile(filePathOrFileBuffer, mediaType = 4, contentType) {
+        // 解析参数获取文件名和文件内容
+        const { fileName, fileBuffer } = parseUploadParams(filePathOrFileBuffer);
+
+        if (!fileBuffer || fileBuffer.length === 0) {
+            throw new Error('文件内容不能为空');
+        }
+
+        // 如果未指定Content-Type，根据文件名自动获取
+        if (!contentType) {
+            contentType = getContentTypeByFileName(fileName);
+        }
+
+        // 1. 获取预签名上传地址
+        const presignedResult = await this.getPresignedUploadUrl(fileName, mediaType, contentType);
+
+        if (!presignedResult.isSuccess()) {
+            return presignedResult;
+        }
+
+        const presignedUrl = presignedResult.getResult();
+        if (!presignedUrl || !presignedUrl.uploadUrl) {
+            throw new Error('预签名上传地址为空');
+        }
+
+        // 2. 执行上传
+        return executeUpload(presignedUrl, fileBuffer, fileName, contentType);
     }
 }
 

@@ -129,6 +129,7 @@ const APIPath = {
     Get_Conversation_Files: '/admin/file/conversation_files',
     Get_User_Files: '/admin/file/user_files',
     Get_Message_File: '/admin/file/message_file',
+    Get_Presigned_Upload_Url: '/admin/oss/get_upload_url',
 
     // ========== 会议相关 ==========
     Conference_List: '/admin/conference/list',
@@ -196,6 +197,9 @@ const APIPath = {
 
     // ========== 机器人会议API ==========
     Robot_Conference_Request: '/robot/conference/request',
+
+    // ========== 机器人文件API ==========
+    Robot_Get_Presigned_Upload_Url: '/robot/oss/get_upload_url',
 };
 
 export default APIPath;
