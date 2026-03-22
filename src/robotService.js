@@ -67,8 +67,8 @@ class RobotService {
         
         // 生成机器人签名
         const nonce = Math.floor(Math.random() * 100000) + 3;
-        const timestamp = Math.floor(Date.now() / 1000);
-        const str = `${nonce}|${this.robotId}|${timestamp}|${this.robotSecret}`;
+        const timestamp = Date.now();
+        const str = `${nonce}|${this.robotSecret}|${timestamp}`;
         const sign = crypto.createHash('sha1').update(str).digest('hex');
 
         const postData = data ? JSON.stringify(data) : '';
@@ -82,6 +82,7 @@ class RobotService {
                 'nonce': nonce.toString(),
                 'timestamp': timestamp.toString(),
                 'sign': sign,
+                'rid': this.robotId,
                 'Content-Length': Buffer.byteLength(postData)
             }
         };
