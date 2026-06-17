@@ -256,7 +256,8 @@ class RobotService {
      */
     async searchUserByDisplayName(keyword) {
         const req = {
-            keyword: keyword
+            keyword: keyword,
+            searchType:100
         };
         return this._httpPost(APIPath.Robot_Search_User, req);
     }
