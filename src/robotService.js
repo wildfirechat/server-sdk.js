@@ -242,6 +242,38 @@ class RobotService {
     }
 
     /**
+     * 获取机器人 owner 的好友列表
+     * @returns {Promise<IMResult>}
+     */
+    async getOwnerFriendList() {
+        return this._httpPost(APIPath.Robot_Friend_Get_List, null);
+    }
+
+    /**
+     * 根据昵称搜索用户
+     * @param {string} keyword - 搜索关键词
+     * @returns {Promise<IMResult>}
+     */
+    async searchUserByDisplayName(keyword) {
+        const req = {
+            keyword: keyword
+        };
+        return this._httpPost(APIPath.Robot_Search_User, req);
+    }
+
+    /**
+     * 获取指定用户拥有的机器人列表
+     * @param {string} userId - 用户ID
+     * @returns {Promise<IMResult>}
+     */
+    async getUserRobots(userId) {
+        const input = {
+            userId: userId
+        };
+        return this._httpPost(APIPath.Robot_Get_User_Robots, input);
+    }
+
+    /**
      * 设置回调地址
      * @param {string} url - 回调地址
      * @returns {Promise<IMResult>}

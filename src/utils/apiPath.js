@@ -156,6 +156,11 @@ const APIPath = {
 
     // ========== 机器人服务API ==========
     Robot_User_Info: '/robot/user_info',
+    Robot_User_Get_Email_Info: '/robot/user/get_info_by_email',
+    Robot_User_Batch_Get_Infos: '/robot/user/batch_get_infos',
+    Robot_Friend_Get_List: '/robot/friend/list',
+    Robot_Search_User: '/robot/user/search',
+    Robot_Get_User_Robots: '/robot/user/get_user_robots',
     Robot_Get_Profile: '/robot/profile',
     Robot_Message_Send: '/robot/message/send',
     Robot_Message_Reply: '/robot/message/reply',
