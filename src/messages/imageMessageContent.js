@@ -5,8 +5,10 @@
 import MediaMessageContent from './mediaMessageContent.js';
 import MessageContentMediaType from './messageContentMediaType.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class ImageMessageContent extends MediaMessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     // base64 encoded, 不包含头部:data:image/png;base64,
     thumbnail;
     imageWidth;

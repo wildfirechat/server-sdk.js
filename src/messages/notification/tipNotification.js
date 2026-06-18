@@ -4,8 +4,10 @@
 
 import NotificationMessageContent from './notificationMessageContent.js'
 import MessageContentType from '../messageContentType.js';
+import PersistFlag from '../persistFlag.js';
 
 export default class TipNotificationMessageContent extends NotificationMessageContent {
+    persistFlag = PersistFlag.Persist;
     tip = '';
 
     constructor(tip) {

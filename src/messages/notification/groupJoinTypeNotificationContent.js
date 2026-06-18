@@ -4,8 +4,10 @@
 
 import GroupNotificationContent from "./groupNotification.js";
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class GroupJoinTypeNotificationContent extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator;
 
     //在group type为Restricted时，0 开放加入权限（群成员可以拉人，用户也可以主动加入）；1 只能群成员拉人入群；2 只能群管理拉人入群

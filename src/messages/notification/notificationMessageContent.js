@@ -3,10 +3,12 @@
  */
 
 import MessageContent from "../messageContent.js";
+import PersistFlag from "../persistFlag.js";
 
 export default class NotificationMessageContent extends MessageContent {
     // message#protoMessageToMessage时设置
     fromSelf = false;
+    persistFlag = PersistFlag.Persist;
 
     constructor(type) {
         super(type);

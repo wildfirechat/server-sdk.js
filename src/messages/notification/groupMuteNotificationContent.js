@@ -4,8 +4,10 @@
 
 import GroupNotificationContent from "./groupNotification.js";
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class GroupMuteNotificationContent extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator;
 
     //0 正常；1 全局禁言

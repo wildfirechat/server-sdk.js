@@ -4,8 +4,10 @@
 
 import NotificationMessageContent from "./notificationMessageContent.js";
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class FriendGreetingNotification extends NotificationMessageContent {
+    persistFlag = PersistFlag.Persist;
     constructor() {
         super(MessageContentType.Friend_Greeting);
     }

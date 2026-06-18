@@ -3,10 +3,12 @@
  */
 
 import MessageContent from './messageContent.js';
+import PersistFlag from './persistFlag.js';
 
 export default class MediaMessageContent extends MessageContent {
     file;
     remotePath = '';
+    persistFlag = PersistFlag.Persist_And_Count;
     localPath = '';
     mediaType = 0;
 

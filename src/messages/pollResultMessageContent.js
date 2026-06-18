@@ -1,5 +1,6 @@
 import MessageContentType from "./messageContentType.js";
 import MessageContent from './messageContent.js'
+import PersistFlag from './persistFlag.js';
 
 /**
  * 投票结果消息内容
@@ -7,6 +8,7 @@ import MessageContent from './messageContent.js'
  * 当投票有更新时（如有人投票、投票结束），发送此消息通知群成员
  */
 export default class PollResultMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     pollId;
     groupId;
     creatorId;

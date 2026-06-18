@@ -4,8 +4,10 @@
 
 import NotificationMessageContent from './notificationMessageContent.js'
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class StartSecretChatNotification extends NotificationMessageContent {
+    persistFlag = PersistFlag.Persist;
 
     constructor() {
         super(MessageContentType.StartSecretChat_Notification);

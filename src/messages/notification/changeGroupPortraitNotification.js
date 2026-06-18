@@ -5,8 +5,10 @@
 import MessageContentType from "../messageContentType.js";
 
 import GroupNotificationContent from "./groupNotification.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class ChangeGroupPortraitNotification extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator = '';
 
     constructor(operator) {

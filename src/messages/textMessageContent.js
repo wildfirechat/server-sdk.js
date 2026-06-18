@@ -5,8 +5,10 @@
 import MessageContent from './messageContent.js';
 import MessageContentType from './messageContentType.js';
 import QuoteInfo from '../model/quoteInfo.js';
+import PersistFlag from './persistFlag.js';
 
 export default class TextMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     content;
     quoteInfo;
 

@@ -5,8 +5,10 @@
 import MessageContentType from '../messageContentType.js';
 
 import GroupNotificationContent from './groupNotification.js';
+import PersistFlag from '../persistFlag.js';
 
 export default class ModifyGroupSettingNotification extends GroupNotificationContent {
+    persistFlag = PersistFlag.No_Persist;
     operator = '';
     //修改设置类型。7为修改是否查看历史消息；8为修改群最大成员数，9为修改是否为超级群
     settingType = 0;

@@ -4,8 +4,10 @@
 
 import MessageContent from './messageContent.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class LocationMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     title;
     // base64 encoded, 不包含头部:data:image/png;base64,
     thumbnail;

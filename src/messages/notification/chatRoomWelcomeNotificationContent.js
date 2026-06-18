@@ -3,8 +3,10 @@
  */
 
 import NotificationMessageContent from "./notificationMessageContent.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class ChatRoomWelcomeNotificationContent extends NotificationMessageContent {
+    persistFlag = PersistFlag.Persist;
     welcome;
 
 

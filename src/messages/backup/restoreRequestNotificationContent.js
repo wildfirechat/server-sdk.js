@@ -4,12 +4,14 @@
 
 import MessageContentType from "../messageContentType.js";
 import NotificationMessageContent from "../notification/notificationMessageContent.js";
+import PersistFlag from '../persistFlag.js';
 
 /**
  * 恢复请求通知消息
  * iOS端请求PC端提供恢复备份列表
  */
 export default class RestoreRequestNotificationContent extends NotificationMessageContent {
+    persistFlag = PersistFlag.Transparent;
     constructor(timestamp) {
         super(MessageContentType.MESSAGE_CONTENT_TYPE_RESTORE_REQUEST);
         this.timestamp = timestamp || 0;

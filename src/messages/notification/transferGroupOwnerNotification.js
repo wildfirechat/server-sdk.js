@@ -4,8 +4,10 @@
 
 import MessageContentType from '../messageContentType.js';
 import GroupNotificationContent from './groupNotification.js';
+import PersistFlag from '../persistFlag.js';
 
 export default class TransferGroupOwnerNotification extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator = '';
     newOwner = '';
 

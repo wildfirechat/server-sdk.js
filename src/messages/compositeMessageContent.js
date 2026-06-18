@@ -7,8 +7,10 @@ import Long from "long";
 import MessagePayload from "./messagePayload.js";
 import ArticlesMessageContent from "./articlesMessageContent.js";
 import { stringValue, compare } from "../util/longUtil.js";
+import PersistFlag from './persistFlag.js';
 
 export default class CompositeMessageContent extends MediaMessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     title = '';
     messages = [];
     // web 端有效，仅仅是用来标识 mediaCompositeMessage 是否已加载

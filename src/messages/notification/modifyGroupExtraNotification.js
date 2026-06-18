@@ -5,8 +5,10 @@
 import MessageContentType from '../messageContentType.js';
 
 import GroupNotificationContent from './groupNotification.js';
+import PersistFlag from '../persistFlag.js';
 
 export default class ModifyGroupExtraNotification extends GroupNotificationContent {
+    persistFlag = PersistFlag.No_Persist;
     operator = '';
     groupExtra = '';
 

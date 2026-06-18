@@ -4,8 +4,10 @@
 
 import MessageContent from './messageContent.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class TypingMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Transparent;
 
     static TYPING_TEXT = 0;
     static TYPING_VOICE = 1;

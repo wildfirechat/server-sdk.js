@@ -1,8 +1,10 @@
 import MessageContent from './messageContent.js';
 import MessageContentType from './messageContentType.js';
 import LinkMessageContent from './linkMessageContent.js';
+import PersistFlag from './persistFlag.js';
 
 export default class ArticlesMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     topArticle;
     subArticles;
 

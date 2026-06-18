@@ -1,7 +1,9 @@
 import MessageContent from './messageContent.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class LinkMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     title;
     contentDigest;
     url;

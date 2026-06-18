@@ -9,8 +9,10 @@
 
 import MessageContent from './messageContent.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class CardMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     /**
      * 0，用户；1，群组；2，聊天室；3，频道
      */

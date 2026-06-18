@@ -4,8 +4,10 @@
 
 import GroupNotificationContent from "./groupNotification.js";
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class GroupRejectJoinNotificationContent extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator;
 
     rejectUserMap;

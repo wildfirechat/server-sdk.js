@@ -5,12 +5,14 @@
 
 import MessageContentType from "../messageContentType.js";
 import NotificationMessageContent from "../notification/notificationMessageContent.js";
+import PersistFlag from '../persistFlag.js';
 
 /**
  * 备份请求通知消息
  * iOS端请求备份到PC端时发送此通知
  */
 export default class BackupRequestNotificationContent extends NotificationMessageContent {
+    persistFlag = PersistFlag.Transparent;
     conversationCount = 0;
     messageCount = 0;
     timestamp = 0;

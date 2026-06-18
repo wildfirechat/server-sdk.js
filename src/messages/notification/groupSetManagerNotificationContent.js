@@ -4,8 +4,10 @@
 
 import GroupNotificationContent from "./groupNotification.js";
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class GroupSetManagerNotificationContent extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator;
     // 1, 设置为管理员；0，取消管理员
     setManagerType;

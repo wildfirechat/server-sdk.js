@@ -4,8 +4,10 @@
 
 import GroupNotificationContent from "./groupNotification.js";
 import MessageContentType from "../messageContentType.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class GroupPrivateChatNotificationContent extends GroupNotificationContent {
+    persistFlag = PersistFlag.Persist;
     operator;
 
     //是否运行群中普通成员私聊。0 允许，1不允许

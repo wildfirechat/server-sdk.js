@@ -5,8 +5,10 @@
 import MessageContentMediaType from './messageContentMediaType.js';
 import MediaMessageContent from './mediaMessageContent.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class FileMessageContent extends MediaMessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     name = '';
     size = 0;
 

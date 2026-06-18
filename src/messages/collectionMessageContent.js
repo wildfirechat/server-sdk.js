@@ -1,8 +1,10 @@
 import MessageContentType from "./messageContentType.js";
 import MessageContent from './messageContent.js'
 import CollectionEntry from "../model/collectionEntry.js";
+import PersistFlag from './persistFlag.js';
 
 export default class CollectionMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     collectionId;
     groupId;
     creatorId;

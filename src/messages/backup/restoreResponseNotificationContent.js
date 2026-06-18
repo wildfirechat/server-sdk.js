@@ -4,12 +4,14 @@
 
 import MessageContentType from "../messageContentType.js";
 import NotificationMessageContent from "../notification/notificationMessageContent.js";
+import PersistFlag from '../persistFlag.js';
 
 /**
  * 恢复响应通知消息
  * PC端响应iOS端的恢复请求
  */
 export default class RestoreResponseNotificationContent extends NotificationMessageContent {
+    persistFlag = PersistFlag.Transparent;
     constructor(approved, serverIP, serverPort) {
         super(MessageContentType.MESSAGE_CONTENT_TYPE_RESTORE_RESPONSE);
         this.approved = approved;

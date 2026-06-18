@@ -1,11 +1,13 @@
 import MessageContentType from "./messageContentType.js";
 import MessageContent from './messageContent.js'
+import PersistFlag from './persistFlag.js';
 
 /**
  * 投票消息内容
  * 对应 Android 的 PollMessageContent
  */
 export default class PollMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     pollId = '';
     groupId = '';
     creatorId = '';

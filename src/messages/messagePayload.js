@@ -15,7 +15,8 @@
             "remoteMediaUrl": "",
             "localMediaPath": "",
             "mentionedType": 0,
-            "mentionedTargets": [ ]
+            "mentionedTargets": [ ],
+            "persistFlag": 3
         },
  */
 export default class MessagePayload {
@@ -32,6 +33,7 @@ export default class MessagePayload {
     mentionedType = 0;
     mentionedTargets = [];
     extra;
+    persistFlag;
 
     // 仅超级群有效，消息是否已完整服务器加载
     notLoaded = 0;

@@ -3,6 +3,7 @@
  */
 
 import MessagePayload from './messagePayload.js';
+import PersistFlag from './persistFlag.js';
 
 export default class MessageContent {
     type;
@@ -12,6 +13,8 @@ export default class MessageContent {
     mentionedTargets = [];
     extra;
     pushContent;
+    // 消息存储策略，参考 iOS WFCCMessageContent#getContentFlags
+    persistFlag = PersistFlag.Persist_And_Count;
     // 仅超级群有效，消息是否已完整服务器加载
     notLoaded = 0;
 
@@ -34,6 +37,7 @@ export default class MessageContent {
         payload.mentionedType = this.mentionedType;
         payload.mentionedTargets = this.mentionedTargets;
         payload.extra = this.extra;
+        payload.persistFlag = this.persistFlag;
         return payload;
     }
 

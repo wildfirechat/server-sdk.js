@@ -5,8 +5,10 @@
 import NotificationMessageContent from './notificationMessageContent.js'
 import MessageContentType from '../messageContentType.js';
 import Long from 'long';
+import PersistFlag from '../persistFlag.js';
 
 export default class RecallMessageNotification extends NotificationMessageContent {
+    persistFlag = PersistFlag.Persist;
     operatorId = '';
     messageUid = new Long(0);
 

@@ -5,8 +5,10 @@
 import MessageContentMediaType from './messageContentMediaType.js';
 import MediaMessageContent from './mediaMessageContent.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class StickerMessageContent extends MediaMessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     width = 200;
     height = 200;
 

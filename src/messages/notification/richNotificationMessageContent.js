@@ -5,8 +5,10 @@
 import MessageContentType from '../messageContentType.js';
 
 import NotificationMessageContent from "./notificationMessageContent.js";
+import PersistFlag from '../persistFlag.js';
 
 export default class RichNotificationMessageContent extends NotificationMessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
 
     // 富通知消息
     title;

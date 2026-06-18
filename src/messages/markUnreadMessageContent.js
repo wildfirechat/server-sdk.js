@@ -1,8 +1,10 @@
 import MessageContent from "./messageContent.js";
 import MessageContentType from "./messageContentType.js";
 import {_patchToJavaLong, _reverseToJsLongString, longValue, stringValue} from "../util/longUtil";
+import PersistFlag from './persistFlag.js';
 
 export default class MarkUnreadMessageContent extends MessageContent {
+    persistFlag = PersistFlag.No_Persist;
     messageUid;
     timestamp;
 

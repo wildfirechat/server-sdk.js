@@ -2,8 +2,10 @@
 
 import MessageContent from "./messageContent.js";
 import MessageContentType from "./messageContentType.js";
+import PersistFlag from './persistFlag.js';
 
 export default class MixMultiMediaTextMessageContent extends MessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     /**
      * 图片、视频 url 列表
      * @type {MultiMediaEntry[]}

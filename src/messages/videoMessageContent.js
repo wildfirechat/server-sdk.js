@@ -5,8 +5,10 @@
 import MediaMessageContent from './mediaMessageContent.js';
 import MessageContentMediaType from './messageContentMediaType.js';
 import MessageContentType from './messageContentType.js';
+import PersistFlag from './persistFlag.js';
 
 export default class VideoMessageContent extends MediaMessageContent {
+    persistFlag = PersistFlag.Persist_And_Count;
     // base64 encoded
     thumbnail;
     duration;
